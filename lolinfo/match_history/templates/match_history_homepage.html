@@ -1,0 +1,14 @@
+{% extends "match_history_base.html" %}
+
+{% block body %}
+<div>
+    <form id="response" action="" method="post" name="search">
+        <br>
+        {% csrf_token %}
+        {{form}}
+        <button class="btn btn-primary" name="search-submit" type="submit" value='submit'> Submit </button>
+    </form>
+</div>
+{% block summoner %}
+{% endblock %}
+{% endblock %}

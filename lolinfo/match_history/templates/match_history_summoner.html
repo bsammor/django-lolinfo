@@ -1,0 +1,148 @@
+{% extends "match_history_homepage.html" %}
+{% load humanize %}
+
+{% block summoner %}
+<div class="summoner-info">
+    <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/profileicon/{{summoner_info.icon_id}}.png" alt="profile-icon" class="img-thumbnail" width=5% height=5%>
+    <div id="name">
+        {{summoner_info.name|title}}
+    </div>
+    <div>
+        {{summoner_info.level}}
+    </div>
+    <form action="" method="post" name="update">
+        {% csrf_token %}
+        {{form1}}
+        <button class="btn btn-primary" name="update-submit" type="submit" value='submit'> Update </button>
+    </form>
+    <br>
+</div>
+
+{% if ranked_info.rank %}
+<div class="ranked-info">
+    <div>
+        {{ranked_info.tier}} {{ranked_info.rank}} {{ranked_info.lp}} LP
+    </div>
+    <div>
+        Win Rate: {{ranked_info.winrate|floatformat:2}}%
+    </div>
+    <div>
+        Wins: {{ranked_info.wins}}
+        Losses: {{ranked_info.losses}}
+    </div>
+    <br>
+</div>
+{% endif %}
+
+<div class='match-history'>
+    <div class="match-history-blk">
+        {% for match in matches_history %}
+            <div class="match">
+                <div class="main">
+                    Mode: {{match.mode}} Duration: {{match.duration.minutes}}m {{match.duration.seconds}}s Result: {{match.result}}
+                    <table>
+                        <tbody>
+                            <tr>
+                                <td> <img src="https://opgg-static.akamaized.net/images/lol/champion/{{match.main.champion|title|cut:"'"|cut:" "}}.png?image=q_auto,w_46&v=1596679559" alt="profile-icon" class="img-thumbnail" width=55px height=55px> {{match.main.level}} </td>
+                                <td>
+                                    <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/spell/{{match.main.spells.0.id}}.png" alt="profile-icon" class="img-thumbnail" width=30px height=30px>
+                                    <br>
+                                    <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/spell/{{match.main.spells.1.id}}.png" alt="profile-icon" class="img-thumbnail" width=30px height=30px>
+                                </td>
+                                <td>KDA: {{match.main.KDA.kills}}/{{match.main.KDA.deaths}}/{{match.main.KDA.assists}}</td>
+                                <td>CS: {{match.main.CS}}</td>
+                                <td>Damage: {{match.main.damage|intcomma}}</td>
+                                <td>
+                                    {% for item in match.main.items %}
+                                        <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/item/{{item}}.png" alt="profile-icon" class="img-thumbnail" width=40px height=40px>
+                                    {% endfor %}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="dropdown">
+                    <button onclick="toggle_match('{{match.main.KDA.kills|add:match.main.KDA.deaths}}')">More</button>
+                    <div style="display: none;" class="dropdown-entry" id="{{match.main.KDA.kills|add:match.main.KDA.deaths}}">
+                        <div id="red">
+                            Team : Red ({{match.red.result}}) 
+                            <table width=45%>
+                                <tbody>
+                                    <tr>
+                                        <th ></th>
+                                        <th ></th>
+                                        <th ></th>
+                                        <th >KDA</th>
+                                        <th >CS</th>
+                                        <th >Damage</th>
+                                        <th >Items</td>
+                                    </tr>
+                                    {% for player in match.red.players %}
+                                        <tr>
+                                            <td> <img src="https://opgg-static.akamaized.net/images/lol/champion/{{player.champion|title|cut:"'"|cut:" "}}.png?image=q_auto,w_46&v=1596679559" alt="profile-icon" class="img-thumbnail" width=60% height=60%> {{player.level}} </td>
+                                            <td>
+                                                <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/spell/{{player.spells.0.id}}.png" alt="profile-icon" class="img-thumbnail" width=30% height=30%>
+                                                <br>
+                                                <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/spell/{{player.spells.1.id}}.png" alt="profile-icon" class="img-thumbnail" width=30% height=30%>
+                                            </td>
+                                            <td>{{player.summoner_name}}</td>
+                                            <td>{{player.KDA.kills}}/{{player.KDA.deaths}}/{{player.KDA.assists}}</td>
+                                            <td>{{player.CS}}</td>
+                                            <td>{{player.damage|intcomma}}</td>
+                                            <td>
+                                                {% for item in player.items %}
+                                                    <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/item/{{item}}.png" alt="profile-icon" class="img-thumbnail" width=7% height=7%>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <br>
+                        </div>
+                        <div id="blue">
+                            Team : Blue ({{match.blue.result}}) 
+                            <table style="width: 45%">
+                                <tbody>
+                                    <tr>
+                                        <th ></th>
+                                        <th ></th>
+                                        <th ></th>
+                                        <th >KDA</th>
+                                        <th >CS</th>
+                                        <th >Damage</th>
+                                        <th >Items</td>
+                                    </tr>
+                                    {% for player in match.blue.players %}
+                                        <tr>
+                                            <td> <img src="https://opgg-static.akamaized.net/images/lol/champion/{{player.champion|title|cut:"'"|cut:" "}}.png?image=q_auto,w_46&v=1596679559" alt="profile-icon" class="img-thumbnail" width=60% height=60%> {{player.level}} </td>
+                                            <td>
+                                                <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/spell/{{player.spells.0.id}}.png" alt="profile-icon" class="img-thumbnail" width=30% height=30%>
+                                                <br>
+                                                <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/spell/{{player.spells.1.id}}.png" alt="profile-icon" class="img-thumbnail" width=30% height=30%>
+                                            </td>
+                                            <td>{{player.summoner_name}}</td>
+                                            <td>{{player.KDA.kills}}/{{player.KDA.deaths}}/{{player.KDA.assists}}</td>
+                                            <td>{{player.CS}}</td>
+                                            <td>{{player.damage|intcomma}}</td>
+                                            <td>
+                                                {% for item in player.items %}
+                                                    <img src="https://ddragon.leagueoflegends.com/cdn/10.16.1/img/item/{{item}}.png" alt="profile-icon" class="img-thumbnail" width=7% height=7%>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="inner"><button class="btn btn-primary" onclick='expand()'>More</button></div>
+{% endblock %}
