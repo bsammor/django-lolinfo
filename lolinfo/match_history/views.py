@@ -6,7 +6,7 @@ from .forms import LoLAccount, Update
 from django.views.decorators.csrf import csrf_exempt
 from match_history.models import Summoner
 
-api_key = 'RGAPI-cb04ac6f-576a-49fc-9f46-2610a5fe0fd7'
+api_key = 'RGAPI-c9832e3e-b012-4d90-ab0d-45a9e346c33b'
 result = {'Win' : 'Victory', 'Fail' : 'Defeat'}
 
 dirname = os.path.dirname(__file__)

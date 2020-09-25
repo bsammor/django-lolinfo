@@ -5,7 +5,7 @@ function expand() {
 
     
     jsonObj = {name : name, region : region, id : id}
-    $.post("/lolinfo/expand/", jsonObj, function(data) {
+    $.post("/match-history/expand/", jsonObj, function(data) {
         var outer = document.createElement("div"); 
         outer.className = "match-history-blk"
 
