@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = '8^^+*9$iuez&@6tefcp(!skgd1j9@23j!)t6f5fqnxtl+i!l=!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -124,4 +124,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_DIR = '/var/www/html/django-lolinfo/'
+STATIC_ROOT = '/var/www/html/django-lolinfo/'
